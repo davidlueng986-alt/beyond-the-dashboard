@@ -18,7 +18,7 @@ Before people live on the Moon, engineers have to decide what is fire-safe there
 
 ## Project repository
 
-[GitHub link]
+https://github.com/davidlueng986-alt/beyond-the-dashboard
 
 ## Detailed description
 
