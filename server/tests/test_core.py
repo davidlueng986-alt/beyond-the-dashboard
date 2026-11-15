@@ -1,3 +1,4 @@
+import pytest
 import json
 from cabin_ai import evidence
 from cabin_ai.agent import run_scripted
@@ -60,3 +61,20 @@ def test_scripted_false_alarm_holds():
     c = run_scripted("smoke_sensor_fault")
     assert c.cabin.vents["vent_b"] == "open"
     assert [e for e in c.log.dump() if e["type"] == "decision"][-1]["payload"]["action"] == "HOLD"
+
+
+def test_robot_backend_selection(monkeypatch, tmp_path):
+    import json
+    from cabin_ai.astrobee import DEFAULT_WAYPOINTS, load_waypoints, make_robot
+    from cabin_ai.cabin import Cabin, RobotSim
+    monkeypatch.delenv("CABIN_AI_ROBOT", raising=False)
+    assert isinstance(make_robot(), RobotSim) and isinstance(Cabin().robot, RobotSim)
+    monkeypatch.setenv("CABIN_AI_ROBOT", "nonsense")
+    with pytest.raises(ValueError):
+        make_robot()
+    # Every cabin waypoint has an Astrobee pose; custom files must cover them all.
+    from cabin_ai.cabin import WAYPOINTS
+    assert set(WAYPOINTS) == set(DEFAULT_WAYPOINTS)
+    f = tmp_path / "wp.json"; f.write_text(json.dumps({"dock": [0] * 7}))
+    with pytest.raises(ValueError):
+        load_waypoints(str(f))

@@ -28,12 +28,17 @@ class RobotSim:
         return {"ok": True, "at": waypoint, "pose": self.pose, "simulated": True}
 
 
+def _make_robot():
+    from .astrobee import make_robot
+    return make_robot()
+
+
 @dataclass
 class Cabin:
     scenario: str = "lunar_cabin"
     link: str = "up"
     vents: dict = field(default_factory=lambda: {"vent_b": "open"})
-    robot: RobotSim = field(default_factory=RobotSim)
+    robot: RobotSim = field(default_factory=lambda: _make_robot())  # CABIN_AI_ROBOT=astrobee -> AstrobeeROS
     faults: set = field(default_factory=set)
     readings: dict = field(default_factory=dict)
 

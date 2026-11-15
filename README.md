@@ -11,7 +11,8 @@ This repository has two parts:
 
 ```
 data/        NASA PSI combustion records (real) + fetch script + provenance
-server/      cabin_ai: MCP server, evidence tools, decision gate, event log with retraction, simulated cabin, autonomous agent, tests
+server/      cabin_ai: MCP server, evidence tools, decision gate, event log with retraction, simulated cabin, autonomous agent, Astrobee bridge, tests
+docs/        ASTROBEE.md: flying NASA's Astrobee in its ROS/Gazebo simulator (bridge written, not yet run)
 sim/         three.js concept scenes for the video (simulated lunar vehicle) + rendering, narration and sound scripts
 web/         concept-dashboard: animated stand-in of the dashboard used in the backup video
 submission/  project page text, AI-use disclosure, video script
@@ -22,7 +23,7 @@ submission/  project page text, AI-use disclosure, video script
 ```bash
 cd server
 pip install -e ".[test]"
-pytest                                   # 9 tests
+pytest                                   # 10 tests
 
 python -m cabin_ai.agent --scripted --scenario smoke_vent_b        # real smoke: inspect, retract, suppress
 python -m cabin_ai.agent --scripted --scenario smoke_sensor_fault  # false alarm: inspect, hold
@@ -35,6 +36,8 @@ python -m cabin_ai.mcp_server                     # stdio
 python -m cabin_ai.mcp_server --http 8765         # streamable HTTP
 CABIN_AI_ROLE=cabin-agent python -m cabin_ai.mcp_server   # full tool set, actions still gated
 ```
+
+Fly NASA's Astrobee in its simulator instead of the built-in robot (written, not yet run): `CABIN_AI_ROBOT=astrobee`, see `docs/ASTROBEE.md`.
 
 Refresh the NASA data: `python data/fetch_psi.py` (or `--offline` to rebuild from the saved raw file).
 
