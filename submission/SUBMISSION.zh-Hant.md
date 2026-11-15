@@ -14,7 +14,7 @@ Beyond the Dashboard（The Talents）
 
 ## 示範影片
 
-[30 秒影片連結]
+https://github.com/davidlueng986-alt/beyond-the-dashboard/blob/main/media/TheTalents_30s.mp4
 
 ## 程式碼庫
 

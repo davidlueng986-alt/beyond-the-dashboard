@@ -14,7 +14,7 @@ Before people live on the Moon, engineers have to decide what is fire-safe there
 
 ## Demo
 
-[Link to the 30-second video]
+https://github.com/davidlueng986-alt/beyond-the-dashboard/blob/main/media/TheTalents_30s.mp4  [replace with a YouTube/Vimeo link if the form requires one]
 
 ## Project repository
 

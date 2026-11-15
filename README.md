@@ -14,6 +14,7 @@ data/        NASA PSI combustion records (real) + fetch script + provenance
 server/      cabin_ai: MCP server, evidence tools, decision gate, event log with retraction, simulated cabin, autonomous agent, Astrobee bridge, tests
 docs/        ASTROBEE.md: flying NASA's Astrobee in its ROS/Gazebo simulator (bridge written, not yet run)
 sim/         three.js concept scenes for the video (simulated lunar vehicle) + rendering, narration and sound scripts
+media/       TheTalents_30s.mp4 (submission video) and a copy without burnt-in subtitles
 web/         concept-dashboard: animated stand-in of the dashboard used in the backup video
 submission/  project page text, AI-use disclosure, video script
 ```
