@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Scene B - NASA's evidence is scattered</title>
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #030407; font-family: 'Inter', sans-serif; color: #e6edf5; }
+  #bg { position: absolute; inset: 0; background: radial-gradient(ellipse 1200px 700px at 50% 44%, #0d1420 0%, #030407 72%); }
+  #stars { position: absolute; inset: 0; }
+  #space { position: absolute; inset: 0; perspective: 1400px; perspective-origin: 960px 470px; }
+  .card { position: absolute; left: 0; top: 0; width: 300px; padding: 20px 22px 18px; box-sizing: border-box; border-radius: 12px;
+          background: rgba(14, 20, 30, .78); border: 1px solid rgba(160, 190, 225, .22); box-shadow: 0 20px 60px rgba(0,0,0,.55); transform-origin: 50% 50%; }
+  .card .n { font-size: 30px; font-weight: 600; letter-spacing: .01em; }
+  .card .k { margin-top: 8px; font-size: 16px; color: #9fb0c3; letter-spacing: .04em; }
+  .card .f { margin-top: 14px; font-size: 12px; letter-spacing: .24em; color: #6f8aa6; font-weight: 600; }
+  #axis { position: absolute; left: 260px; top: 800px; width: 1400px; height: 120px; }
+  #axis .line { position: absolute; left: 0; top: 40px; height: 2px; width: 1400px; background: rgba(160, 190, 225, .35); }
+  .tick { position: absolute; top: 18px; transform: translateX(-50%); text-align: center; }
+  .tick .dot { width: 14px; height: 14px; border-radius: 50%; margin: 0 auto; }
+  .tick .lb { margin-top: 18px; font-size: 18px; letter-spacing: .26em; font-weight: 600; white-space: nowrap; }
+  .tick .sb { margin-top: 6px; font-size: 15px; letter-spacing: .1em; color: #8d9aab; white-space: nowrap; }
+  #gap { position: absolute; top: 0; height: 84px; border: 1px dashed #ff7a59; border-radius: 10px; background: rgba(255, 90, 50, .08); }
+  #vig { position: absolute; inset: 0; background: radial-gradient(ellipse 1300px 760px at 50% 48%, rgba(0,0,0,0) 55%, rgba(0,0,0,.65) 100%); }
+  #bars::before, #bars::after { content: ''; position: absolute; left: 0; width: 1920px; height: 132px; background: #000; }
+  #bars::before { top: 0; } #bars::after { bottom: 0; }
+  #veil { position: absolute; inset: 0; background: #000; }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="stars" width="1920" height="1080"></canvas>
+<div id="space"></div>
+<div id="axis">
+  <div class="line"></div>
+  <div id="gap"></div>
+  <div class="tick" id="t0" style="left:120px"><div class="dot" style="background:#8fd0ff;box-shadow:0 0 16px #8fd0ff"></div><div class="lb" style="color:#cfe9ff">MICROGRAVITY</div><div class="sb">ISS · Cygnus</div></div>
+  <div class="tick" id="t1" style="left:700px"><div class="dot" style="border:2px solid #ff7a59;box-sizing:border-box"></div><div class="lb" style="color:#ff9a7d">MOON · 1/6 g</div><div class="sb" style="color:#ff9a7d">no combustion tests in PSI</div></div>
+  <div class="tick" id="t2" style="left:1280px"><div class="dot" style="background:#c9d3de"></div><div class="lb" style="color:#e6edf5">EARTH · 1 g</div><div class="sb">ground tests</div></div>
+</div>
+<div id="vig"></div><div id="bars"></div><div id="veil"></div>
+<script>
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ss = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const mix = (a, b, t) => a + (b - a) * t;
+const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+const STUDIES = [   // records from NASA's PSI repository, Research Area = Combustion Science
+  ['BASS', 'spacecraft fire safety', 'PSI-26 · ISS'], ['BASS-II', 'spacecraft fire safety', 'PSI-25 · ISS'], ['SAFFIRE-I', 'spacecraft fire', 'PSI-98'], ['SAFFIRE-II', 'surface combustion', 'PSI-99 · CYGNUS'],
+  ['FLEX', 'spacecraft fire safety', 'PSI-69 · ISS'], ['FLEX-2', 'spacecraft fire safety', 'PSI-68 · ISS'], ['CFI', 'droplets', 'PSI-39 · ISS'], ['ACME BRE', 'gaseous fuels', 'PSI-20 · ISS'],
+  ['SAME', 'smoke and aerosol', 'PSI-102 · ISS'], ['DAFT', 'spacecraft fire safety', 'PSI-47 · ISS'], ['SPICE', 'fire safety', 'PSI-107 · ISS'], ['SLICE', 'lifted flames', 'PSI-106 · ISS']];
+const space = document.getElementById('space');
+const cards = STUDIES.map((s, i) => { const d = document.createElement('div'); d.className = 'card';
+  d.innerHTML = `<div class="n">${s[0]}</div><div class="k">${s[1]}</div><div class="f">${s[2]}</div>`; space.appendChild(d);
+  const col = i % 4, row = Math.floor(i / 4);
+  return { d, x: 110 + col * 450 + (hash(i) - .5) * 150, y: 175 + row * 205 + (hash(i + 9) - .5) * 60, z: -60 - hash(i + 3) * 760, rx: (hash(i + 4) - .5) * 40, ry: (hash(i + 5) - .5) * 60, rz: (hash(i + 6) - .5) * 18, ph: hash(i + 7) * 6.28 }; });
+// stars
+{ const g = document.getElementById('stars').getContext('2d'); for (let i = 0; i < 700; i++) { const a = .15 + hash(i + 50) * .6; g.fillStyle = `rgba(220,232,245,${a})`; const r = hash(i + 51) > .97 ? 1.6 : .8; g.beginPath(); g.arc(hash(i + 52) * 1920, hash(i + 53) * 1080, r, 0, 7); g.fill(); } }
+window.setTime = t => {
+  // camera drifts forward through the cards
+  const push = t * 55;
+  cards.forEach((c, i) => {
+    const a = ss(.1 + i * .06, .55 + i * .06, t) * (1 - ss(3.0, 3.6, t) * .6);
+    const z = c.z + push + Math.sin(t * .6 + c.ph) * 30;
+    c.d.style.opacity = a * clamp((z + 1700) / 500);
+    c.d.style.transform = `translate3d(${c.x + Math.sin(t * .4 + c.ph) * 14}px, ${c.y + Math.cos(t * .35 + c.ph) * 10}px, ${z}px) rotateX(${c.rx + t * 2}deg) rotateY(${c.ry - t * 3}deg) rotateZ(${c.rz}deg)`;
+    c.d.style.filter = `blur(${clamp((-z - 520) / 200, 0, 2.5)}px)`;
+  });
+  // gravity axis: microgravity and Earth light up, the Moon stays empty
+  document.getElementById('axis').style.opacity = ss(2.7, 3.2, t);
+  document.getElementById('axis').style.transform = `translateY(${mix(30, 0, ss(2.7, 3.3, t))}px)`;
+  document.querySelector('#axis .line').style.width = 1400 * ss(2.8, 3.6, t) + 'px';
+  document.getElementById('t0').style.opacity = ss(3.0, 3.3, t); document.getElementById('t2').style.opacity = ss(3.3, 3.6, t);
+  const t1 = document.getElementById('t1'); t1.style.opacity = ss(3.7, 4.0, t);
+  const g = document.getElementById('gap'), w = 340 * ss(3.7, 4.1, t); g.style.left = (700 - w / 2) + 'px'; g.style.width = w + 'px';
+  g.style.opacity = ss(3.7, 3.9, t) * (.7 + .3 * Math.sin(t * 6));
+  document.getElementById('veil').style.opacity = Math.max(1 - ss(0, .35, t), ss(6.05, 6.3, t));
+};
+document.fonts.ready.then(() => { window.setTime(parseFloat(new URLSearchParams(location.search).get('t') || '4.5')); window.ready = true; });
+</script>
+</body>
+</html>

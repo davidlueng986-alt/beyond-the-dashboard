@@ -1,0 +1,6 @@
+__pycache__/
+*.egg-info/
+runs/
+node_modules/
+*.part.mp4
+*.wav

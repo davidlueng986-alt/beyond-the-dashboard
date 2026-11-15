@@ -1,0 +1,22 @@
+[
+ [
+  "To send people to the Moon, engineers have to decide what's fire-safe up there.",
+  1.05
+ ],
+ [
+  "NASA's fire experiments hold the answers. But they're scattered, and none in its archive ran in lunar gravity.",
+  1.08
+ ],
+ [
+  "So we built the dashboard. Ask about a cabin, and it ranks NASA's evidence, explains it, and flags what's untested.",
+  1.08
+ ],
+ [
+  "Then we went beyond it. In a real fire, that call is live. So in our simulated lunar cabin, an AI crew member uses the same evidence to decide, and act.",
+  1.08
+ ],
+ [
+  "Beyond the dashboard.",
+  0.95
+ ]
+]

@@ -1,0 +1,7 @@
+{
+  "name": "cabin-sim-film",
+  "private": true,
+  "type": "module",
+  "description": "Renders the concept animation scenes to video. Scenes are plain HTML + three.js.",
+  "dependencies": { "puppeteer-core": "^24.0.0", "three": "0.187.0" }
+}

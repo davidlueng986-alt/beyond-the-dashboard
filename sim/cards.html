@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; font-family: 'Inter', sans-serif; color: #ecebe6; }
+  .abs { position: absolute; }
+  #bg { position: absolute; inset: 0; }
+  .big { position: absolute; left: 0; width: 1920px; top: 800px; text-align: center; font-size: 40px; font-weight: 500; letter-spacing: .6em; text-indent: .6em; white-space: nowrap; color: #f2f5f8; text-shadow: 0 0 28px rgba(0,0,0,.85), 0 2px 6px rgba(0,0,0,.7); }
+  .slate { position: absolute; inset: 0; background: #17181a; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+  .slate .n { font-size: 26px; letter-spacing: .28em; color: #8d8c87; }
+  .slate .t { font-size: 78px; font-weight: 600; }
+  .slate .d { font-size: 30px; color: #b9b8b2; max-width: 1300px; text-align: center; line-height: 1.4; }
+  .slate .who { font-size: 26px; color: #f0604a; letter-spacing: .08em; }
+  #wm { position: absolute; right: 22px; bottom: 14px; font-size: 13px; letter-spacing: .08em; color: rgba(255,255,255,.55); display: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="wm">AI-generated animation</div>
+<script>
+const Q = new URLSearchParams(location.search), kind = Q.get('k') || 'title', root = document.getElementById('root');
+if (Q.get('wm') === '1') document.getElementById('wm').style.display = 'block';
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ss = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const mix = (a, b, t) => a + (b - a) * t;
+if (kind === 'big') { root.innerHTML = `<div class="big">${Q.get('text')}</div>`; window.setTime = () => {}; }
+else if (kind === 'slate') {
+  document.body.style.background = '#17181a';
+  root.innerHTML = `<div class="slate"><div class="n">PLACEHOLDER · ${Q.get('n')}</div><div class="t">${Q.get('title')}</div><div class="who">${Q.get('who') || ''}</div><div class="d">${Q.get('line') || ''}</div></div>`;
+  window.setTime = () => {};
+} else { // title card, 1.5 s
+  document.body.style.background = '#06080c';
+  root.innerHTML = `
+   <div id="bg" style="background: radial-gradient(ellipse 1300px 760px at 50% 46%, #101a26 0%, #06080c 70%)"></div>
+   <div class="abs" id="ln" style="left:50%;top:548px;height:2px;background:#7fd0ff;box-shadow:0 0 18px #7fd0ff"></div>
+   <div class="abs" id="t1" style="left:0;width:1920px;top:400px;text-align:center;font-size:118px;font-weight:600;letter-spacing:.02em;white-space:nowrap">BEYOND THE DASHBOARD</div>
+   <div class="abs" id="t2" style="left:0;width:1920px;top:586px;text-align:center;font-size:30px;letter-spacing:.3em;color:#9aa5b1;white-space:nowrap">AN AI CREW MEMBER FOR FIRE SAFETY IN DEEP SPACE</div>
+   <div class="abs" id="t3" style="left:0;width:1920px;top:850px;text-align:center;font-size:22px;letter-spacing:.24em;color:#6f7b88;white-space:nowrap">NASA SPACE APPS 2026 · FLAME IN FREEFALL</div>`;
+  window.setTime = t => {
+    const a = ss(0, .35, t), w = 620 * ss(.1, .6, t);
+    const t1 = document.getElementById('t1'); t1.style.opacity = a; t1.style.transform = `translateY(${mix(26, 0, a)}px)`; t1.style.letterSpacing = mix(.08, .02, ss(0, 1.5, t)) + 'em';
+    const ln = document.getElementById('ln'); ln.style.width = w + 'px'; ln.style.marginLeft = (-w / 2) + 'px';
+    document.getElementById('t2').style.opacity = ss(.35, .7, t); document.getElementById('t3').style.opacity = ss(.55, .9, t) * .9;
+  };
+}
+document.fonts.ready.then(() => { window.setTime(parseFloat(Q.get('t') || '1.5')); window.ready = true; });
+</script>
+</body>
+</html>

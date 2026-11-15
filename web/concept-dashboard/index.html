@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Demo 1 - dashboard (stand-in animation)</title>
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #0e0f11; color: #ecebe6;
+               font-family: 'Inter', sans-serif; }
+  .mono { font-family: 'DejaVu Sans Mono', monospace; }
+  #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 560px; }
+  .abs { position: absolute; }
+  .muted { color: #8d8c87; }
+  /* telemetry */
+  .tm { position: absolute; top: 44px; }
+  .tm .k { font-size: 17px; color: #a3a29c; }
+  .tm .v { font-size: 62px; font-weight: 300; letter-spacing: -.01em; line-height: 1.1; }
+  .tm .u { font-size: 17px; color: #8d8c87; margin-left: 8px; }
+  #rule { position: absolute; left: 0; top: 176px; width: 1286px; height: 1px; background: #232427; }
+  #side { position: absolute; left: 1286px; top: 0; width: 634px; height: 1080px; background: #131416; border-left: 1px solid #232427; }
+  /* card */
+  #card { position: absolute; left: 64px; top: 262px; width: 1186px; height: 668px; background: #17181a; border: 1px solid #2b2c30; border-radius: 22px; overflow: hidden; }
+  .title { position: absolute; left: 40px; top: 34px; font-size: 40px; font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+  .chip { position: absolute; right: 36px; top: 46px; font-size: 16px; color: #8d8c87; }
+  .tile { position: absolute; width: 344px; height: 150px; background: #101113; border: 1px solid #26272a; border-radius: 14px; box-sizing: border-box; padding: 18px 22px; }
+  .tile .k { font-size: 17px; color: #a3a29c; }
+  .tile .v { font-size: 50px; font-weight: 400; line-height: 1.25; }
+  .tile .s { font-size: 16px; color: #8d8c87; }
+  .pill { position: absolute; right: 16px; top: 16px; font-size: 12px; letter-spacing: .08em; font-weight: 600; color: #9cc4e4; border: 1px solid rgba(156,196,228,.45); padding: 3px 8px; border-radius: 20px; }
+  .red { color: #f0604a; }
+  .shim { position: absolute; border-radius: 12px; background: linear-gradient(90deg, #1f2023 0%, #2a2b2f 50%, #1f2023 100%); background-size: 600px 100%; }
+  /* chat */
+  .bub { position: absolute; font-size: 21px; line-height: 30px; padding: 14px 20px; border-radius: 16px; box-sizing: border-box; }
+  .bub.u { right: 40px; background: #efece3; color: #1a1a1a; border-bottom-right-radius: 4px; }
+  .bub.a { left: 1322px; background: #1c1d20; color: #ecebe6; border-bottom-left-radius: 4px; width: 500px; }
+  .tick { position: absolute; left: 1326px; font-size: 16.5px; white-space: nowrap; }
+  .tick .fn { color: #9cc4e4; } .tick .ar { color: #5e5e5a; margin: 0 8px; } .tick .out { color: #c9c8c2; }
+  #input { position: absolute; left: 1322px; top: 946px; width: 558px; height: 64px; border: 1px solid #2f3034; border-radius: 32px; background: #101113; }
+  #mic { position: absolute; left: 14px; top: 12px; width: 40px; height: 40px; border-radius: 50%; background: #26272a; }
+  #mic i { position: absolute; left: 14px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: #8d8c87; }
+  #itext { position: absolute; left: 70px; top: 18px; font-size: 20px; white-space: nowrap; }
+  #wave { position: absolute; right: 22px; top: 12px; height: 40px; display: flex; align-items: center; gap: 4px; }
+  #wave b { display: block; width: 4px; border-radius: 2px; background: #f0604a; }
+  #wm { position: absolute; right: 22px; bottom: 14px; font-size: 13px; letter-spacing: .08em; color: rgba(255,255,255,.55); display: none; z-index: 9; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="tm" style="left:64px"><div class="k">Oxygen</div><div class="v">30.5<span class="u">%</span></div></div>
+  <div class="tm" style="left:330px"><div class="k">Pressure</div><div class="v">70.3<span class="u">kPa</span></div></div>
+  <div class="tm" style="left:620px"><div class="k">Carbon monoxide</div><div class="v">2<span class="u">ppm</span></div></div>
+  <div class="tm" style="left:870px"><div class="k">Smoke</div><div class="v">0.1<span class="u">%/m</span></div></div>
+  <div id="rule"></div>
+  <div class="abs" style="left:64px;top:204px;font-size:26px;font-weight:600">Panels</div>
+  <div class="abs" style="left:1116px;top:200px;font-size:17px;border:1px solid #3a3b3f;border-radius:20px;padding:7px 16px">+ New panel</div>
+
+  <div id="card">
+    <div id="skel">
+      <div class="title muted" style="color:#c9c8c2">Building your panel…</div>
+      <div class="shim" style="left:40px;top:108px;width:620px;height:22px"></div>
+      <div class="shim" style="left:40px;top:160px;width:1106px;height:170px"></div>
+      <div class="shim" style="left:40px;top:354px;width:1106px;height:110px"></div>
+    </div>
+    <div class="title" id="tA"></div>
+    <div class="title" id="tB">This cabin is above every BASS-II solid-fuel test</div>
+    <div class="chip" id="chip"></div>
+    <!-- state A -->
+    <div class="abs" id="sA" style="left:40px;top:102px;width:1000px;font-size:23px;line-height:34px;color:#b9b8b2">More oxygen keeps flames alive longer. This cabin runs at <span class="red">30.5 %</span>. BASS-II's solid-fuel tests stayed <span style="color:#ecebe6">below 21 %</span>.</div>
+    <div class="tile" id="a1" style="left:40px;top:196px"><div class="k">This cabin</div><div class="v red" id="a1v" style="visibility:hidden">30.5 %</div><div class="s">oxygen</div></div>
+    <div class="tile" id="a2" style="left:404px;top:196px"><div class="pill">PSI-25</div><div class="k">BASS-II, solid fuels</div><div class="v" id="a2v"></div><div class="s">oxygen, varied below</div></div>
+    <div class="tile" id="a3" style="left:768px;top:196px"><div class="pill">PSI-20</div><div class="k">ACME BRE, gas-fed burner</div><div class="v" id="a3v"></div><div class="s">test atmosphere, 8.2 psia</div></div>
+    <div class="abs" id="hA" style="left:40px;top:382px;font-size:24px;font-weight:600">Which NASA studies reached this oxygen level?</div>
+    <div class="abs muted" id="lA" style="left:40px;top:420px;font-size:20px">ACME BRE's burner did. BASS-II's solid fuels did not.</div>
+    <svg class="abs" id="strip" style="left:40px;top:470px" width="1106" height="170"></svg>
+    <!-- state B -->
+    <svg class="abs" id="dial" style="left:40px;top:110px" width="620" height="420"></svg>
+    <div class="abs" id="legend" style="left:76px;top:590px;font-size:17px;color:#a3a29c;white-space:nowrap">
+      <span style="color:#9cc4e4">■</span> BASS-II solid fuels &nbsp;&nbsp; <span style="color:#e2b866">■</span> ACME BRE burner &nbsp;&nbsp; <span class="red">■</span> this cabin</div>
+    <div class="abs" id="sB" style="left:700px;top:150px;width:440px;font-size:24px;line-height:35px;color:#b9b8b2">Only ACME BRE's gas-fed burner went higher, and there <span style="color:#ecebe6;font-weight:600">flames kept burning with no airflow</span>.</div>
+    <div class="tile" id="b1" style="left:700px;top:356px;width:440px;height:132px"><div class="pill">NASA PSI · PSI-20</div><div class="k">Cutting ventilation</div><div class="v" style="font-size:34px;line-height:1.5">may not put it out</div></div>
+    <!-- shared number -->
+    <div class="abs red" id="num" style="font-weight:400;white-space:nowrap;line-height:1"></div>
+  </div>
+
+  <div id="side">
+    <div class="abs" style="left:36px;top:46px;font-size:22px;font-weight:600">Crew AI <span class="muted" style="font-weight:400;font-size:17px;margin-left:10px">talk or type · it answers here and builds panels</span></div>
+    <div class="abs" style="left:0;top:100px;width:634px;height:1px;background:#232427"></div>
+  </div>
+  <div class="bub u" id="u1" style="top:128px">How dangerous is this cabin's oxygen level?</div>
+  <div class="abs muted" id="st1" style="left:1326px;top:206px;font-size:16px">Crew AI is building a panel…</div>
+  <div class="tick mono" id="k1" style="top:240px"></div>
+  <div class="tick mono" id="k2" style="top:270px"></div>
+  <div class="tick mono" id="k3" style="top:300px"></div>
+  <div class="bub a" id="r1" style="top:344px">Built it: this cabin's oxygen against every NASA study that tested it.</div>
+  <div class="bub u" id="u2" style="top:462px">Make it more visual</div>
+  <div class="tick mono" id="k4" style="top:540px"></div>
+  <div class="bub a" id="r2" style="top:584px">Done. Red is this cabin. Blue is where BASS-II tested solid fuels, gold where ACME BRE's burner went.</div>
+  <div id="input"><div id="mic"><i></i></div><div id="itext"></div><div id="wave"></div></div>
+</div>
+<div id="wm">AI-generated animation</div>
+
+<script>
+const Q = new URLSearchParams(location.search);
+if (Q.get('wm') === '1') document.getElementById('wm').style.display = 'block';
+const DUR = 8.0;
+const $ = id => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ss = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const mix = (a, b, t) => a + (b - a) * t;
+const outBack = x => { x = clamp(x); const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const typed = (s, t0, t, cps) => s.slice(0, Math.max(0, Math.floor((t - t0) * cps)));
+const show = (el, a, dy = 0, sc = 1) => { el.style.opacity = a; el.style.transform = `translateY(${dy}px) scale(${sc})`; };
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (p, tag, at) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); p.appendChild(e); return e; };
+
+// waveform bars
+const wave = $('wave'); const bars = []; for (let i = 0; i < 26; i++) { const b = document.createElement('b'); wave.appendChild(b); bars.push(b); }
+
+// range strip (state A): 15..40 % oxygen
+const strip = $('strip'); const X = v => 20 + (v - 15) / 25 * 1060;
+mk(strip, 'line', { x1: 20, x2: 1080, y1: 118, y2: 118, stroke: '#34353a', 'stroke-width': 1 });
+for (const v of [15, 20, 25, 30, 35, 40]) { mk(strip, 'line', { x1: X(v), x2: X(v), y1: 118, y2: 126, stroke: '#4a4b50' }); const tx = mk(strip, 'text', { x: X(v), y: 148, fill: '#8d8c87', 'font-size': 16, 'text-anchor': 'middle', 'font-family': 'Inter' }); tx.textContent = v + ' %'; }
+const gasBar = mk(strip, 'rect', { x: X(15), y: 30, height: 14, rx: 7, fill: '#e2b866', width: 0 });
+const solBar = mk(strip, 'rect', { x: X(15), y: 70, height: 14, rx: 7, fill: '#9cc4e4', width: 0 });
+const gasLb = mk(strip, 'text', { x: X(15), y: 22, fill: '#a3a29c', 'font-size': 16, 'font-family': 'Inter' }); gasLb.textContent = 'ACME BRE burner';
+const solLb = mk(strip, 'text', { x: X(15), y: 62, fill: '#a3a29c', 'font-size': 16, 'font-family': 'Inter' }); solLb.textContent = 'BASS-II solid fuels';
+const cabLine = mk(strip, 'line', { x1: X(30.5), x2: X(30.5), y1: 8, y2: 118, stroke: '#f0604a', 'stroke-width': 3 });
+const cabLb = mk(strip, 'text', { x: X(30.5) + 10, y: 104, fill: '#f0604a', 'font-size': 17, 'font-weight': 600, 'font-family': 'Inter' }); cabLb.textContent = 'this cabin';
+
+// dial (state B)
+const dial = $('dial'); const CX = 310, CY = 330, RR = 250;
+const ang = v => Math.PI - (v - 15) / 25 * Math.PI;
+const pt = (v, r) => [CX + Math.cos(ang(v)) * r, CY - Math.sin(ang(v)) * r];
+const arc = (v0, v1, r) => { if (v1 - v0 < 0.01) return ''; const [x0, y0] = pt(v0, r), [x1, y1] = pt(v1, r); return `M${x0} ${y0}A${r} ${r} 0 0 1 ${x1} ${y1}`; };
+const track = mk(dial, 'path', { fill: 'none', stroke: '#26272a', 'stroke-width': 34, 'stroke-linecap': 'round' });
+const gasArc = mk(dial, 'path', { fill: 'none', stroke: '#e2b866', 'stroke-width': 7, 'stroke-linecap': 'round' });
+const solArc = mk(dial, 'path', { fill: 'none', stroke: '#9cc4e4', 'stroke-width': 34, 'stroke-linecap': 'round' });
+const needle = mk(dial, 'line', { x1: CX, y1: CY, stroke: '#f0604a', 'stroke-width': 7, 'stroke-linecap': 'round' });
+const hub = mk(dial, 'circle', { cx: CX, cy: CY, r: 15, fill: '#f0604a' });
+const lo = mk(dial, 'text', { x: CX - RR, y: CY + 52, fill: '#a3a29c', 'font-size': 22, 'text-anchor': 'middle', 'font-family': 'Inter' }); lo.textContent = '15 % O₂';
+const hi = mk(dial, 'text', { x: CX + RR, y: CY + 52, fill: '#a3a29c', 'font-size': 22, 'text-anchor': 'middle', 'font-family': 'Inter' }); hi.textContent = '40 %';
+
+const TA = 'Is this oxygen level dangerous?';
+const tick = (el, fn, out, t0, t) => { const a = ss(t0, t0 + .12, t); el.style.opacity = a; if (a <= 0) { el.innerHTML = ''; return; } const f = typed(fn, t0, t, 60), done = t > t0 + fn.length / 60; el.innerHTML = `<span class="fn">${f}</span>` + (done ? `<span class="ar">→</span><span class="out">${typed(out, t0 + fn.length / 60 + .08, t, 60)}</span>` : ''); };
+
+window.setTime = function (t) {
+  const B = ss(5.25, 5.75, t);                       // A -> B progress
+  // ---- chat ----
+  const talk1 = t >= .25 && t < 1.5, talk2 = t >= 4.45 && t < 5.1, talk = talk1 || talk2;
+  $('itext').textContent = talk1 ? typed("How dangerous is this cabin's oxygen level?", .35, t, 40) : (talk2 ? typed('Make it more visual', 4.5, t, 40) : 'Message the crew AI…');
+  $('itext').style.color = talk ? '#ecebe6' : '#6c6b67';
+  $('mic').style.background = talk ? '#f0604a' : '#26272a'; $('mic').firstChild.style.background = talk ? '#fff' : '#8d8c87';
+  $('mic').style.boxShadow = talk ? `0 0 0 ${4 + 5 * (0.5 + 0.5 * Math.sin(t * 14))}px rgba(240,96,74,.22)` : 'none';
+  bars.forEach((b, i) => { const h = talk ? 6 + 30 * Math.abs(Math.sin(t * 13 + i * 1.7) * Math.sin(t * 5.1 + i * .6)) : 4; b.style.height = h + 'px'; b.style.opacity = talk ? 1 : 0; });
+  show($('u1'), ss(1.5, 1.65, t), mix(14, 0, ss(1.5, 1.7, t)));
+  $('st1').style.opacity = ss(1.62, 1.75, t) * (1 - ss(3.8, 3.95, t)) * (0.6 + 0.4 * Math.sin(t * 8));
+  tick($('k1'), 'evidence.search', '24 PSI combustion records', 1.75, t);
+  tick($('k2'), 'evidence.compare', 'oxygen range', 2.15, t);
+  tick($('k3'), 'ui.render', 'panel', 2.55, t);
+  show($('r1'), ss(3.9, 4.05, t), mix(14, 0, ss(3.9, 4.1, t)));
+  show($('u2'), ss(5.1, 5.25, t), mix(14, 0, ss(5.1, 5.3, t)));
+  tick($('k4'), 'ui.edit', 'dial · same panel', 5.3, t);
+  show($('r2'), ss(6.7, 6.85, t), mix(14, 0, ss(6.7, 6.9, t)));
+  // ---- card ----
+  const cardIn = ss(1.52, 1.75, t); show($('card'), cardIn, mix(18, 0, cardIn));
+  const sk = cardIn * (1 - ss(1.95, 2.15, t)); $('skel').style.opacity = sk;
+  document.querySelectorAll('.shim').forEach(s => s.style.backgroundPosition = `${(t * 700) % 600}px 0`);
+  const tA = $('tA'); tA.textContent = typed(TA, 2.05, t, 75); show(tA, (t >= 2.05 ? 1 : 0) * (1 - ss(5.25, 5.5, t)), mix(0, -16, ss(5.25, 5.5, t)));
+  show($('tB'), ss(5.45, 5.75, t), mix(16, 0, ss(5.45, 5.75, t)));
+  $('chip').textContent = t >= 5.15 && t < 6.9 ? 'crew AI is editing…' : (t >= 6.9 ? 'crew AI · v2' : (t >= 4.0 ? 'crew AI · v1' : (t >= 1.52 ? 'crew AI is building…' : '')));
+  $('chip').style.opacity = t >= 5.15 && t < 6.9 ? 0.6 + 0.4 * Math.sin(t * 10) : 1;
+  const outA = 1 - B;
+  show($('sA'), ss(2.35, 2.6, t) * outA, mix(10, 0, ss(2.35, 2.6, t)) + 20 * B);
+  const tile = (el, t0) => { const a = ss(t0, t0 + .22, t); show(el, a * outA, mix(16, 0, a) + 26 * B, mix(.96, 1, outBack((t - t0) / .35))); return a; };
+  tile($('a1'), 2.65); tile($('a2'), 2.9); tile($('a3'), 3.15);
+  const cnt = (v, t0) => (v * ss(t0, t0 + .45, t)).toFixed(1) + ' %';
+  $('a2v').textContent = '< ' + cnt(21, 2.95); $('a3v').textContent = cnt(34, 3.2);
+  show($('hA'), ss(3.35, 3.55, t) * outA, 26 * B); show($('lA'), ss(3.5, 3.7, t) * outA, 26 * B);
+  $('strip').style.opacity = ss(3.5, 3.65, t) * outA; $('strip').style.transform = `translateY(${26 * B}px)`;
+  gasBar.setAttribute('width', (X(34) - X(15)) * ss(3.55, 4.1, t)); solBar.setAttribute('width', (X(21) - X(15)) * ss(3.65, 4.0, t));
+  const cl = ss(3.9, 4.15, t); cabLine.setAttribute('y1', mix(118, 8, cl)); cabLine.style.opacity = cl; cabLb.style.opacity = ss(4.05, 4.25, t);
+  gasLb.style.opacity = ss(3.55, 3.75, t); solLb.style.opacity = ss(3.65, 3.85, t);
+  // shared number: tile A (62,247 size 50) -> under the dial (centered at 350, 472 size 96)
+  const num = $('num'); const nIn = ss(2.7, 2.9, t), k = ss(5.3, 6.0, t), ke = k * k * (3 - 2 * k);
+  const val = t < 5.3 ? 30.5 * ss(2.7, 3.15, t) : 30.5;
+  num.textContent = val.toFixed(1) + ' %'; num.style.opacity = nIn;
+  const fs = mix(50, 104, ke); num.style.fontSize = fs + 'px';
+  num.style.left = mix(63, 350 - fs * 1.62, ke) + 'px'; num.style.top = mix(248 + 26 * 0, 458, ke) + 'px';
+  num.style.transform = `translateY(${mix(16, 0, nIn)}px)`;
+  // dial
+  $('dial').style.opacity = ss(5.5, 5.7, t);
+  track.setAttribute('d', arc(15, mix(15, 40, ss(5.5, 6.05, t)), RR));
+  gasArc.setAttribute('d', arc(15, mix(15, 34, ss(5.75, 6.45, t)), RR + 30));
+  solArc.setAttribute('d', arc(15, mix(15, 21, ss(5.8, 6.3, t)), RR));
+  const nv = 15 + 15.5 * outBack((t - 6.0) / .95); const [nx, ny] = pt(clamp(nv, 15, 40), RR - 46);
+  needle.setAttribute('x2', nx); needle.setAttribute('y2', ny); const na = ss(5.9, 6.05, t); needle.style.opacity = na; hub.style.opacity = na;
+  lo.style.opacity = hi.style.opacity = ss(5.9, 6.2, t);
+  show($('legend'), ss(6.4, 6.65, t)); show($('sB'), ss(6.15, 6.4, t), mix(12, 0, ss(6.15, 6.4, t)));
+  const b1 = ss(6.5, 6.72, t); show($('b1'), b1, mix(16, 0, b1), mix(.96, 1, outBack((t - 6.5) / .35)));
+  // slow push-in on the finished panel
+  const z = ss(6.9, 8.0, t); $('stage').style.transform = `scale(${mix(1, 1.03, z)})`;
+  // fade in from black at the head
+  document.body.style.opacity = ss(0, .2, t);
+};
+document.fonts.ready.then(() => { window.setTime(parseFloat(Q.get('t') || '0')); window.ready = true;
+  if (Q.get('play') === '1') { const t0 = performance.now(); (function loop() { window.setTime(((performance.now() - t0) / 1000) % DUR); requestAnimationFrame(loop); })(); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+[project]
+name = "cabin-ai"
+version = "0.1.0"
+description = "AI crew member for spacecraft fire safety: MCP server over NASA PSI combustion evidence, decision gate, simulated lunar cabin"
+requires-python = ">=3.10"
+dependencies = ["mcp>=1.2"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
